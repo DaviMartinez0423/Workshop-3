@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from kafka import KafkaProducer
+from services.kafka import producer
 
 def normalization2015_2016(df, year):
     df = df.rename(columns={'Economy (GDP per Capita)':'GDP per Capita',
@@ -41,11 +41,11 @@ def normalization2018_2019(df, year):
 
 def transformations():
     # Reading
-    df_2015 = pd.read_csv('dataset/2015.csv')
-    df_2016 = pd.read_csv('dataset/2016.csv')
-    df_2017 = pd.read_csv('dataset/2017.csv')
-    df_2018 = pd.read_csv('dataset/2018.csv')
-    df_2019 = pd.read_csv('dataset/2019.csv')
+    df_2015 = pd.read_csv('../notebooks/dataset/2015.csv')
+    df_2016 = pd.read_csv('../notebooks/dataset/2016.csv')
+    df_2017 = pd.read_csv('../notebooks/dataset/2017.csv')
+    df_2018 = pd.read_csv('../notebooks/dataset/2018.csv')
+    df_2019 = pd.read_csv('../notebooks/dataset/2019.csv')
     
     # Transformations
     df_2015 = normalization2015_2016(df_2015, 2015)
@@ -73,4 +73,4 @@ if __name__ == "__main__":
     training_df = transformations()
     training_df = model(training_df)
     for index, row in training_df.iterrows():
-        KafkaProducer(row)
+        producer(row)
