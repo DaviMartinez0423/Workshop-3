@@ -5,7 +5,7 @@ from psycopg2 import Error
 
 def conn():
     try:
-        with open('../config.json', encoding = 'utf-8') as f:
+        with open('../configuration.json', encoding = 'utf-8') as f:
             config = json.load(f)
             conn =  psycopg2.connect(
                 
