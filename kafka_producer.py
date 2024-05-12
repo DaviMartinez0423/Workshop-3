@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from services.kafka import producer
+import time
 
 def normalization2015_2016(df, year):
     df = df.rename(columns={'Economy (GDP per Capita)':'GDP per Capita',
@@ -9,7 +10,6 @@ def normalization2015_2016(df, year):
                             'Trust (Government Corruption)':'Government Corruption'})
     df.columns = df.columns.str.lower()
     df['year'] = year
-    
     return df
 
 def normalization2017(df, year):
@@ -23,7 +23,7 @@ def normalization2017(df, year):
                                   'Trust..Government.Corruption.':'Government Corruption',
                                   'Dystopia.Residual':'DystopiaResidual'})
     df.columns = df.columns.str.lower()
-    df['year'] = year   
+    df['year'] = year       
     return df
 
 def normalization2018_2019(df, year):
@@ -31,21 +31,19 @@ def normalization2018_2019(df, year):
                                     'Score':'Happiness Score',
                                     'Healthy life expectancy':'Life Expectancy',
                                     'Freedom to make life choices':'Freedom',
-                                    'Perceptions of corruption':'Government Corruption',
-                                    'GDP per capita':'GDP per Capita'})
+                                    'Perceptions of corruption':'Government Corruption'})
 
     df.columns = df.columns.str.lower()
-    df = df.drop('overall rank', axis=1)
     df['year'] = year
     return df
 
 def transformations():
     # Reading
-    df_2015 = pd.read_csv('../notebooks/dataset/2015.csv')
-    df_2016 = pd.read_csv('../notebooks/dataset/2016.csv')
-    df_2017 = pd.read_csv('../notebooks/dataset/2017.csv')
-    df_2018 = pd.read_csv('../notebooks/dataset/2018.csv')
-    df_2019 = pd.read_csv('../notebooks/dataset/2019.csv')
+    df_2015 = pd.read_csv('notebooks/dataset/2015.csv')
+    df_2016 = pd.read_csv('notebooks/dataset/2016.csv')
+    df_2017 = pd.read_csv('notebooks/dataset/2017.csv')
+    df_2018 = pd.read_csv('notebooks/dataset/2018.csv')
+    df_2019 = pd.read_csv('notebooks/dataset/2019.csv')
     
     # Transformations
     df_2015 = normalization2015_2016(df_2015, 2015)
@@ -62,7 +60,6 @@ def transformations():
 
 def model(training_df):
     features = ['freedom','gdp per capita','life expectancy','social support']
-    training_df = training_df[features]
     X = training_df[features]
     y = training_df['happiness score']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -74,3 +71,4 @@ if __name__ == "__main__":
     training_df = model(training_df)
     for index, row in training_df.iterrows():
         producer(row)
+        time.sleep(1)
