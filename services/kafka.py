@@ -1,6 +1,6 @@
 import pandas as pd
 import joblib
-from json import dumps
+from json import dumps, loads
 from kafka import KafkaProducer, KafkaConsumer
 from services.db_index import insertion
 
@@ -16,19 +16,23 @@ def producer(row):
     
     message = row.to_dict()
     producer_kafka.send('Hapiness', value= message)
-    print('The message was sent successfully')
-    
+    print(message)
+
 def consumer():
     consumer_kafka = KafkaConsumer(
         'Hapiness',
         enable_auto_commit=True,
         group_id='ETL Group',
-        value_deserializer=lambda m: m,
+        value_deserializer=lambda m: loads(m.decode('utf-8')),
         bootstrap_servers=['localhost:9092']
     )   
     
-    for info in consumer_kafka:
-        df = pd.json_normalize(info.value)
-        df['Hapiness Prediction'] = joblib_file.predict(df[['freedom', 'gdp per capita', 'life expectancy', 'social support']])
-        insertion(df.iloc[0])
-        print('Information stored in the PostgreSQL database')
+    for message in consumer_kafka:
+        df = pd.json_normalize(data=message.value)
+        print(df)
+        # if not df.empty:
+        #     df['Hapiness_Prediction'] = joblib_file.predict(df[['freedom', 'gdp_per_capita', 'life_expectancy', 'social_support']])
+        #     insertion(df.iloc[0])
+        #     print('messagermation stored in the PostgreSQL database')
+        # else:
+        #     print('No data available in the message from Kafka')

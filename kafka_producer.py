@@ -54,14 +54,21 @@ def transformations():
     
     # Concatenation
     training_df = pd.concat([df_2015, df_2016, df_2017, df_2018, df_2019], ignore_index=True, join='inner')
+    training_df = training_df.rename(columns={
+        'happiness score': 'happiness_score',
+        'gdp per capita': 'gdp_per_capita',
+        'social support': 'social_support',
+        'life expectancy': 'life_expectancy',
+        'government corruption': 'government_corruption'
+    })
     training_df = training_df.dropna()
     
     return training_df
 
 def model(training_df):
-    features = ['freedom','gdp per capita','life expectancy','social support']
+    features = ['freedom','gdp_per_capita','life_expectancy','social_support']
     X = training_df[features]
-    y = training_df['happiness score']
+    y = training_df['happiness_score']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
     return training_df.loc[y_train.index]
