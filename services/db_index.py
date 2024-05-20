@@ -4,7 +4,7 @@ from psycopg2 import Error
 
 def get_connection():
     try:
-        with open('C:/Users/Usuario/Workshop_3.1/Workshop-3/services/configuration.json', encoding = 'utf-8') as f:
+        with open('./services/configuration.json', encoding = 'utf-8') as f:
             config = json.load(f)
             conn =  psycopg2.connect(
                 
@@ -34,7 +34,8 @@ def table_creation():
             freedom REAL,
             government_corruption REAL,
             generosity REAL,
-            year INTEGER
+            year INTEGER,
+            happiness_prediction REAL
         )
     """
     
@@ -54,26 +55,43 @@ def table_creation():
         if conn is not None:
             conn.close()
 
-def insertion(row):
-    index = '''
-        INSERT INTO happiness_table(country, happiness_score, gdp_per_capita, social_support, freedom, life_expectancy, generosity, year)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    '''
+def insertion(message):
     conn = None
-    
     try:
         conn = get_connection()
         cursor = conn.cursor()
-        cursor.execute(index, row)
-        cursor.close()
+        data = message
+        data_tuple = (
+            data.get('country'),
+            data.get('happiness_score'),
+            data.get('gdp_per_capita'),
+            data.get('social_support'),
+            data.get('life_expectancy'),
+            data.get('freedom'),
+            data.get('government_corruption'),
+            data.get('generosity'),
+            data.get('year'),
+            data.get('happiness_prediction')
+        )
+
+        insert_query = '''
+        INSERT INTO happiness_table (country, happiness_score, gdp_per_capita, social_support, 
+                                     life_expectancy, freedom, government_corruption, generosity, year, happiness_prediction)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        '''
+
+        cursor.execute(insert_query, data_tuple)
+        print('Row inserted successfully', data_tuple)
         conn.commit()
-        
+
     except Error as e:
         print("There was an error inserting the data: ", e)
-        
+
     finally:
         if conn is not None:
+            cursor.close()
             conn.close()
+
 
 def importation():
     query = f'''SELECT *

@@ -71,7 +71,7 @@ def model(training_df):
     y = training_df['happiness_score']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
-    return training_df.loc[y_train.index]
+    return training_df.loc[y_test.index]
 
 if __name__ == "__main__":
     training_df = transformations()

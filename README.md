@@ -1,3 +1,9 @@
+<p align="center">
+  <img width="180" src="./public/Kafka_logo.png" alt="Kafka">
+  <h1 align="center">Kafka</h1>
+  <p align="center">Kafka streaming exercise</p>
+</p>
+
 # Kafka Stream Workshop
 
 This workshop implements a Kafka stream in a dataset analysis
