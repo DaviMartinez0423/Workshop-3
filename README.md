@@ -1,7 +1,6 @@
 <p align="center">
   <div style="display: flex; justify-content: center; align-items: center;">
-    <img width="180" src="./public/Kafka_logo.png" alt="Kafka">
-    <img width="180" src="./public/airflow_logo.png" alt="Airflow">
+    <img width="180" src="./public/Kafka_logo1.png" alt="Kafka">
   </div>
   <h1 align="center">⚙️ Videogames Data Streaming ⚙️</h1>
 </p>
