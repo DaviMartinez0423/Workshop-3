@@ -1,4 +1,6 @@
 import json
+import os
+import pandas as pd
 import psycopg2
 from psycopg2 import Error
 
@@ -93,22 +95,29 @@ def insertion(message):
             conn.close()
 
 
-def importation():
-    query = f'''SELECT *
-    FROM happiness_table
-    '''
-    conn = None
-    
-    try:
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(query)
-        cursor.close()
-        conn.commit()
-        
-    except Error as e:
-        print("There was an error importing the data: ", e)
-        
-    finally:
-        if conn is not None:
-            conn.close()
+        def execute():
+            query = """
+            SELECT *
+            FROM happiness_table
+            """
+            
+            conn = None
+            df = None
+            
+            try:
+                conn = get_connection()
+                cursor = conn.cursor()
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                column_names = [desc[0] for desc in cursor.description]
+                df = pd.DataFrame(rows, columns=column_names)
+                cursor.close()
+                
+            except Error as e:
+                print("There was an error executing the query: ", e)
+                
+            finally:
+                if conn is not None:
+                    conn.close()
+            
+            return df

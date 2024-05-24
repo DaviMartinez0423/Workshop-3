@@ -78,4 +78,4 @@ if __name__ == "__main__":
     training_df = model(training_df)
     for index, row in training_df.iterrows():
         producer(row)
-        time.sleep(1)
+        # time.sleep(1)
