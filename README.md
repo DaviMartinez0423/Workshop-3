@@ -2,7 +2,7 @@
   <div style="display: flex; justify-content: center; align-items: center;">
     <img width="180" src="./public/Kafka_logo1.png" alt="Kafka">
   </div>
-  <h1 align="center">⚙️ Videogames Data Streaming ⚙️</h1>
+  <h1 align="center">⚙️ Data Streaming ⚙️</h1>
 </p>
 
 Welcome. This repository contains an exercise of data streaming using Apache Kafka. The objective of the challenge is to use the datasets provided by the teacher in charge to perform a cleaning process and use this information to create a prediction model, which will be used to predict one of the columns in the datasets.
